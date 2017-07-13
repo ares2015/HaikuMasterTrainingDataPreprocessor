@@ -26,7 +26,8 @@ public class SentencesTokenTagDataFactoryImpl implements SentencesTokenTagDataFa
         int numberOfTaggedWords = 0;
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\MergedWikiGuthenbergWord2VecData.txt"));
+//            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\MergedWikiGuthenbergWord2VecData.txt"));
+            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\DummyData.txt"));
 //            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\WikiWord2VecFile.txt"));
         } catch (final FileNotFoundException e) {
             e.printStackTrace();
@@ -36,36 +37,42 @@ public class SentencesTokenTagDataFactoryImpl implements SentencesTokenTagDataFa
             while (sentence != null) {
                 if (!"".equals(sentence)) {
                     StringBuilder stringBuilder = new StringBuilder();
-                    String[] tokensList = sentence.split("\\ ");
-                    List<List<String>> tagsMultiList = posTagger.tag(sentence);
-                    for (int i = 0; i < tokensList.length; i++) {
-                        for (List<String> tagsList : tagsMultiList) {
-                            String tag = tagsList.get(i);
-                            String token = tokensList[i];
-                            if (tokenTagDataCache.containsKey(token)) {
-                                if (!tokenTagDataCache.get(token).contains(tag)) {
+                    String[] tokensArray = sentence.split("\\ ");
+                    try {
+                        List<List<String>> tagsMultiList = posTagger.tag(sentence);
+                        List<String> tagsList = tagsMultiList.get(0);
+                        for (String tagsAsString : tagsList) {
+                            String[] tagsArray = tagsAsString.split("\\ ");
+                            for (int i = 0; i < tagsArray.length; i++) {
+                                String tag = tagsArray[i];
+                                String token = tokensArray[i];
+                                if (tokenTagDataCache.containsKey(token)) {
+                                    if (!tokenTagDataCache.get(token).contains(tag)) {
+                                        String tokenTagDataStringRow = token + "#" + tag;
+                                        tokenTagDataStringRows.add(tokenTagDataStringRow);
+                                        numberOfTaggedWords++;
+                                        tokenTagDataCache.get(token).add(tag);
+                                    }
+                                } else {
+                                    Set<String> tags = new HashSet<String>();
+                                    tags.add(tag);
+                                    tokenTagDataCache.put(token, tags);
                                     String tokenTagDataStringRow = token + "#" + tag;
                                     tokenTagDataStringRows.add(tokenTagDataStringRow);
                                     numberOfTaggedWords++;
-                                    tokenTagDataCache.get(token).add(tag);
                                 }
-                            } else {
-                                Set<String> tags = new HashSet<String>();
-                                tags.add(tag);
-                                tokenTagDataCache.put(token, tags);
-                                String tokenTagDataStringRow = token + "#" + tag;
-                                tokenTagDataStringRows.add(tokenTagDataStringRow);
-                                numberOfTaggedWords++;
-                            }
-                            if ("N".equals(tag) || "AJ".equals(tag) || "V".equals(tag) || "AV".equals(tag)) {
-                                stringBuilder.append(token);
-                                stringBuilder.append(" ");
+                                if ("N".equals(tag) || "AJ".equals(tag) || "V".equals(tag) || "AV".equals(tag)) {
+                                    stringBuilder.append(token);
+                                    stringBuilder.append(" ");
+                                }
                             }
                         }
+                        String filteredSentence = stringBuilder.toString();
+                        System.out.println("Filtered sentence: " + filteredSentence);
+                        filteredSentences.add(filteredSentence);
+                    } catch (Exception e) {
+                        sentence = br.readLine();
                     }
-                    String filteredSentence = stringBuilder.toString();
-                    System.out.println("Filtered sentence: " + filteredSentence);
-                    filteredSentences.add(filteredSentence);
                 }
                 sentence = br.readLine();
             }

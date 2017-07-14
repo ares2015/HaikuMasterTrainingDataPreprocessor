@@ -40,31 +40,29 @@ public class SentencesTokenTagDataFactoryImpl implements SentencesTokenTagDataFa
                     String[] tokensArray = sentence.split("\\ ");
                     try {
                         List<List<String>> tagsMultiList = posTagger.tag(sentence);
-                        List<String> tagsList = tagsMultiList.get(0);
-                        for (String tagsAsString : tagsList) {
-                            String[] tagsArray = tagsAsString.split("\\ ");
-                            for (int i = 0; i < tagsArray.length; i++) {
-                                String tag = tagsArray[i];
-                                String token = tokensArray[i];
-                                if (tokenTagDataCache.containsKey(token)) {
-                                    if (!tokenTagDataCache.get(token).contains(tag)) {
-                                        String tokenTagDataStringRow = token + "#" + tag;
-                                        tokenTagDataStringRows.add(tokenTagDataStringRow);
-                                        numberOfTaggedWords++;
-                                        tokenTagDataCache.get(token).add(tag);
-                                    }
-                                } else {
-                                    Set<String> tags = new HashSet<String>();
-                                    tags.add(tag);
-                                    tokenTagDataCache.put(token, tags);
+                        String tagsAsString = tagsMultiList.get(0).get(0);
+                        String[] tagsArray = tagsAsString.split("\\ ");
+                        for (int i = 0; i < tagsArray.length; i++) {
+                            String tag = tagsArray[i];
+                            String token = tokensArray[i];
+                            if (tokenTagDataCache.containsKey(token)) {
+                                if (!tokenTagDataCache.get(token).contains(tag)) {
                                     String tokenTagDataStringRow = token + "#" + tag;
                                     tokenTagDataStringRows.add(tokenTagDataStringRow);
                                     numberOfTaggedWords++;
+                                    tokenTagDataCache.get(token).add(tag);
                                 }
-                                if ("N".equals(tag) || "AJ".equals(tag) || "V".equals(tag) || "AV".equals(tag)) {
-                                    stringBuilder.append(token);
-                                    stringBuilder.append(" ");
-                                }
+                            } else {
+                                Set<String> tags = new HashSet<String>();
+                                tags.add(tag);
+                                tokenTagDataCache.put(token, tags);
+                                String tokenTagDataStringRow = token + "#" + tag;
+                                tokenTagDataStringRows.add(tokenTagDataStringRow);
+                                numberOfTaggedWords++;
+                            }
+                            if ("N".equals(tag) || "AJ".equals(tag) || "V".equals(tag) || "AV".equals(tag)) {
+                                stringBuilder.append(token);
+                                stringBuilder.append(" ");
                             }
                         }
                         String filteredSentence = stringBuilder.toString();

@@ -54,10 +54,10 @@ public class SentencesTokenTagDataFactoryImpl implements SentencesTokenTagDataFa
                             for (int i = 0; i < tagsArray.length; i++) {
                                 String tag = tagsArray[i];
                                 String token = tokensArray[i];
-                                String tokenTagDataStringRow = token + "#" + tag;
-                                tokenTagDataStringRows.add(tokenTagDataStringRow);
-                                numberOfTaggedWords++;
                                 if ("N".equals(tag) || "AJ".equals(tag) || "V".equals(tag) || "AV".equals(tag)) {
+                                    String tokenTagDataStringRow = token + "#" + tag;
+                                    tokenTagDataStringRows.add(tokenTagDataStringRow);
+                                    numberOfTaggedWords++;
                                     stringBuilder.append(token);
                                     stringBuilder.append(" ");
                                 }

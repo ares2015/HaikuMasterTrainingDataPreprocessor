@@ -10,7 +10,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Oliver on 7/13/2017.
@@ -28,7 +29,6 @@ public class SentencesTokenTagDataFactoryImpl implements SentencesTokenTagDataFa
         long startTime = System.currentTimeMillis();
         List<String> filteredSentences = new ArrayList<>();
         List<String> tokenTagDataStringRows = new ArrayList<>();
-        Map<String, Set<String>> tokenTagDataCache = new HashMap<String, Set<String>>();
         int numberOfTaggedWords = 0;
         int numberOfSentences = 0;
         BufferedReader br = null;
@@ -54,21 +54,9 @@ public class SentencesTokenTagDataFactoryImpl implements SentencesTokenTagDataFa
                             for (int i = 0; i < tagsArray.length; i++) {
                                 String tag = tagsArray[i];
                                 String token = tokensArray[i];
-                                if (tokenTagDataCache.containsKey(token)) {
-                                    if (!tokenTagDataCache.get(token).contains(tag)) {
-                                        String tokenTagDataStringRow = token + "#" + tag;
-                                        tokenTagDataStringRows.add(tokenTagDataStringRow);
-                                        numberOfTaggedWords++;
-                                        tokenTagDataCache.get(token).add(tag);
-                                    }
-                                } else {
-                                    Set<String> tags = new HashSet<String>();
-                                    tags.add(tag);
-                                    tokenTagDataCache.put(token, tags);
-                                    String tokenTagDataStringRow = token + "#" + tag;
-                                    tokenTagDataStringRows.add(tokenTagDataStringRow);
-                                    numberOfTaggedWords++;
-                                }
+                                String tokenTagDataStringRow = token + "#" + tag;
+                                tokenTagDataStringRows.add(tokenTagDataStringRow);
+                                numberOfTaggedWords++;
                                 if ("N".equals(tag) || "AJ".equals(tag) || "V".equals(tag) || "AV".equals(tag)) {
                                     stringBuilder.append(token);
                                     stringBuilder.append(" ");

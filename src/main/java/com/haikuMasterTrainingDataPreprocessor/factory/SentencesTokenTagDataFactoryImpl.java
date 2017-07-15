@@ -81,6 +81,10 @@ public class SentencesTokenTagDataFactoryImpl implements SentencesTokenTagDataFa
                     tokenTagDataStringRowsDataWriter.write();
                     tokenTagDataStringRows.clear();
                 }
+                if (numberOfSentences % 100000 == 0) {
+                    posTagger = null;
+                    posTagger = new PosTaggerImpl();
+                }
                 sentence = br.readLine();
             }
         } catch (final IOException e) {

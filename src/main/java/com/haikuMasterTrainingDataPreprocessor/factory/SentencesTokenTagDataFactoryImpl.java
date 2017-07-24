@@ -33,7 +33,7 @@ public class SentencesTokenTagDataFactoryImpl implements SentencesTokenTagDataFa
         int numberOfSentences = 0;
         BufferedReader br = null;
         try {
-            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\MergedWikiGuthenbergWord2VecData.txt"));
+            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\MergedWikiGutenbergWord2VecData.txt"));
 //            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\DummyData.txt"));
 //            br = new BufferedReader(new FileReader("C:\\Users\\Oliver\\Documents\\NlpTrainingData\\HaikuMasterTrainingData\\WikiWord2VecFile.txt"));
         } catch (final FileNotFoundException e) {
